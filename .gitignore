@@ -1,0 +1,8 @@
+target/
+*.class
+*.log
+*.iml
+.idea/
+.vscode/
+build_log*.txt
+build_output.txt
