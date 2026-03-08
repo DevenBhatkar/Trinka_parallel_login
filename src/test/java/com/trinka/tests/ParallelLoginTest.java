@@ -12,11 +12,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ParallelLoginTest {
 
     private static final String HUB_URL = "http://localhost:4445/wd/hub";
+    private static final String PASSWORD = "Deven@21";
 
     private static final ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
 
@@ -27,57 +29,18 @@ public class ParallelLoginTest {
         driverThread.set(driver);
     }
 
-    @Test
-    public void loginTest1() {
-        performLogin("Test-1");
+    @DataProvider(name = "users", parallel = true)
+    public Object[][] userData() {
+        Object[][] data = new Object[10][2];
+        for (int i = 1; i <= 10; i++) {
+            data[i - 1][0] = "User-" + i;
+            data[i - 1][1] = "trinka_parallel_execution_user" + i + "@yopmail.com";
+        }
+        return data;
     }
 
-    @Test
-    public void loginTest2() {
-        performLogin("Test-2");
-    }
-
-    @Test
-    public void loginTest3() {
-        performLogin("Test-3");
-    }
-
-    @Test
-    public void loginTest4() {
-        performLogin("Test-4");
-    }
-
-    @Test
-    public void loginTest5() {
-        performLogin("Test-5");
-    }
-
-    @Test
-    public void loginTest6() {
-        performLogin("Test-6");
-    }
-
-    @Test
-    public void loginTest7() {
-        performLogin("Test-7");
-    }
-
-    @Test
-    public void loginTest8() {
-        performLogin("Test-8");
-    }
-
-    @Test
-    public void loginTest9() {
-        performLogin("Test-9");
-    }
-
-    @Test
-    public void loginTest10() {
-        performLogin("Test-10");
-    }
-
-    private void performLogin(String testName) {
+    @Test(dataProvider = "users")
+    public void loginTest(String testName, String email) {
         WebDriver driver = driverThread.get();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         long threadId = Thread.currentThread().getId();
@@ -88,12 +51,11 @@ public class ParallelLoginTest {
         driver.get(url);
 
         // Enter email
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")))
-                .sendKeys("premium_prod_automation@yopmail.com");
-        System.out.println("[" + testName + "] Thread " + threadId + " - Email entered");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email"))).sendKeys(email);
+        System.out.println("[" + testName + "] Thread " + threadId + " - Email: " + email);
 
         // Enter password
-        driver.findElement(By.id("password")).sendKeys("Deven@21");
+        driver.findElement(By.id("password")).sendKeys(PASSWORD);
         System.out.println("[" + testName + "] Thread " + threadId + " - Password entered");
 
         // Click submit

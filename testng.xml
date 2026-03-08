@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Trinka Parallel Login Suite" parallel="methods" thread-count="10">
+<suite name="Trinka Parallel Login Suite" parallel="methods" thread-count="10" data-provider-thread-count="10">
     <test name="Parallel Login Test">
         <classes>
             <class name="com.trinka.tests.ParallelLoginTest"/>
